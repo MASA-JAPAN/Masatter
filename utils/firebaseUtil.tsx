@@ -123,6 +123,8 @@ const deleteComment = (commentId: string) => {
  * comment fucntions
  */
 const upsertPost = (postId: string, userId: string, content: string) => {
+  console.log(content);
+
   //ToDo:user validation
   if (postId) {
     firestore
