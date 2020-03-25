@@ -76,7 +76,7 @@ const likePost = (likeUserId: string, likePostId: string) => {
   });
 };
 
-const UnLikePost = (likeUserId: string, likePostId: string) => {
+const unLikePost = (likeUserId: string, likePostId: string) => {
   firestore
     .collection("likes")
     .where("likeUserId", "==", likeUserId)
@@ -120,7 +120,7 @@ const deleteComment = (commentId: string) => {
 };
 
 /**
- * comment fucntions
+ * post fucntions
  */
 const upsertPost = (postId: string, userId: string, content: string) => {
   console.log(content);
@@ -135,7 +135,7 @@ const upsertPost = (postId: string, userId: string, content: string) => {
       });
   } else {
     firestore.collection("posts").add({
-      userId: userId,
+      createdById: userId,
       content: content
     });
   }
@@ -155,14 +155,67 @@ const deletePost = (commentId: string) => {
     });
 };
 
+const getPostById = (postId: string) => {
+  firestore
+    .collection("posts")
+    .doc(postId)
+    .get()
+    .then(function(doc) {
+      return doc;
+    })
+    .catch(function(error) {
+      // The document probably doesn't exist.
+      console.error("Error deleting document: ", error);
+    });
+};
+
+const getPostsByUser = (userId: string) => {
+  firestore
+    .collection("posts")
+    .where("createdById", "==", userId)
+    .get()
+    .then(function(querySnapshot) {
+      return querySnapshot;
+    })
+    .catch(function(error) {
+      // The document probably doesn't exist.
+      console.error("Error deleting document: ", error);
+    });
+};
+
+const getPostsByFollowing = async (following: string[]) => {
+  let posts: Object[] = new Array();
+
+  await firestore
+    .collection("posts")
+    .where("createdById", "in", following)
+    .get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        posts.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+    })
+    .catch(function(error) {
+      // The document probably doesn't exist.
+      console.error("Error deleting document: ", error);
+    });
+  return posts;
+};
+
 export {
   googleAuthenticate,
   followUser,
   UnFollowUser,
   likePost,
-  UnLikePost,
+  unLikePost,
   comment,
   deleteComment,
   upsertPost,
-  deletePost
+  deletePost,
+  getPostById,
+  getPostsByUser,
+  getPostsByFollowing
 };

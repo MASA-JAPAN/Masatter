@@ -1,14 +1,37 @@
 import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import Slide from "@material-ui/core/Slide";
+import TextField from "@material-ui/core/TextField";
+import { TransitionProps } from "@material-ui/core/transitions";
 import { upsertPost } from "../utils/firebaseUtil";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    appBar: {
+      position: "relative"
+    },
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1
+    }
+  })
+);
+
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  }
+);
+
 export default function PostDialog(props: any) {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
 
@@ -30,37 +53,45 @@ export default function PostDialog(props: any) {
         {props.buttonName}
       </Button>
       <Dialog
+        fullScreen
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        TransitionComponent={Transition}
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Please post</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="What are you doing now?"
-            type="text"
-            fullWidth
-            onChange={e => handleOnchange(e)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              upsertPost("", "test", inputValue);
-              handleClose();
-            }}
-            color="primary"
-          >
-            Post
-          </Button>
-        </DialogActions>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              Sound
+            </Typography>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                upsertPost("", "test", inputValue);
+                handleClose();
+              }}
+            >
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <TextField
+          margin="dense"
+          id="name"
+          multiline
+          rows="4"
+          type="text"
+          fullWidth
+          onChange={e => handleOnchange(e)}
+        />
       </Dialog>
     </div>
   );
