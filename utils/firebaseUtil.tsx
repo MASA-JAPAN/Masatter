@@ -155,18 +155,26 @@ const deletePost = (commentId: string) => {
     });
 };
 
-const getPostById = (postId: string) => {
-  firestore
+const getPostById = async (postId: string) => {
+  console.log(postId);
+  let post: Object = new Object();
+
+  await firestore
     .collection("posts")
     .doc(postId)
     .get()
     .then(function(doc) {
-      return doc;
+      console.log(doc.data());
+      post = {
+        id: doc.id,
+        ...doc.data()
+      };
     })
     .catch(function(error) {
       // The document probably doesn't exist.
       console.error("Error deleting document: ", error);
     });
+  return post;
 };
 
 const getPostsByUser = (userId: string) => {

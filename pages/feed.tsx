@@ -1,8 +1,9 @@
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import AppBar from "../components/AppBar";
+import Bar from "../components/Bar";
 import PostDialog from "../components/PostDialog";
 import Post from "../components/Post";
 import { getPostsByFollowing } from "../utils/firebaseUtil";
+import Router from "next/router";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -20,9 +21,18 @@ export default function Feed(props: any) {
 
   return (
     <div>
-      <AppBar />
+      <Bar />
       {props.posts.map((post: any) => (
-        <Post key={post.id} content={post.content} />
+        <div
+          onClick={() =>
+            Router.push({
+              pathname: "/postPage",
+              query: { id: post.id }
+            })
+          }
+        >
+          <Post key={post.id} content={post.content} />
+        </div>
       ))}
 
       <div className={classes.postButton}>
