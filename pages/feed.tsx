@@ -1,5 +1,4 @@
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Bar from "../components/Bar";
 import PostDialog from "../components/PostDialog";
 import Post from "../components/Post";
 import { getPostsByFollowing } from "../utils/firebaseUtil";
@@ -21,7 +20,6 @@ export default function Feed(props: any) {
 
   return (
     <div>
-      <Bar />
       {props.posts.map((post: any) => (
         <div
           onClick={() =>

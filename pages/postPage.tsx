@@ -1,5 +1,4 @@
 // import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Bar from "../components/Bar";
 // import Post from "../components/Post";
 import { getPostById } from "../utils/firebaseUtil";
 
@@ -19,7 +18,6 @@ export default function PostPage(props: any) {
 
   return (
     <div>
-      <Bar />
       {props.post.id}
       {/* <Post key={post.id} content={post.content} /> */}
     </div>
