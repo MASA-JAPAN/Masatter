@@ -1,31 +1,76 @@
-// import { makeStyles, createStyles } from "@material-ui/core/styles";
-// import Post from "../components/Post";
+import React from "react";
+import Post from "../components/Post";
+import Commnet from "../components/Comment";
 import { getPostById } from "../utils/firebaseUtil";
-
-// const useStyles = makeStyles(() =>
-//   createStyles({
-//     postButton: {
-//       position: "absolute",
-//       right: "10px",
-//       bottom: "10px"
-//     }
-//   })
-// );
-
+import { getCommentsByPost } from "../utils/firebaseUtil";
+import { comment } from "../utils/firebaseUtil";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 export default function PostPage(props: any) {
-  //   const classes = useStyles();
-  console.log(props);
+  const [commentProgress, setCommentProgress] = React.useState(false);
+  const [commentValue, setCommentValue] = React.useState("");
+
+  const [commentValues, setCommentValues] = React.useState([{}]);
+
+  const handleOnchange = (e: any) => {
+    setCommentValue(e.target.value);
+  };
+
+  const handleComment = () => {
+    comment("testUser", props.post.id, commentValue);
+    let tmpCommentValues = commentValues.push({
+      comment: commentValue
+    });
+    console.log(tmpCommentValues);
+
+    // setCommentValues(tmpCommentValues);
+    setCommentProgress(false);
+  };
+
+  React.useEffect(() => {
+    console.log(props.comments);
+    setCommentValues(props.comments);
+    console.log(commentValues);
+  });
 
   return (
     <div>
-      {props.post.id}
-      {/* <Post key={post.id} content={post.content} /> */}
+      <div>
+        <Post content={props.post.content} />
+      </div>
+      {commentValues.map((comment: any) => (
+        <Commnet comment={comment.comment} />
+      ))}
+
+      {commentProgress ? (
+        <div>
+          <TextField
+            id="outlined-basic"
+            label="First Name"
+            variant="outlined"
+            onChange={e => handleOnchange(e)}
+          />
+          <Button variant="outlined" color="primary" onClick={handleComment}>
+            Done
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            setCommentProgress(true);
+          }}
+        >
+          Comment
+        </Button>
+      )}
     </div>
   );
 }
 
 PostPage.getInitialProps = async ({ query }: { query: any }) => {
   const post = await getPostById(query.id);
-  console.log(post);
-  return { post };
+  const comments = await getCommentsByPost(query.id);
+  return { post, comments };
 };

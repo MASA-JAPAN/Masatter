@@ -98,6 +98,8 @@ const unLikePost = (likeUserId: string, likePostId: string) => {
  * comment fucntions
  */
 const comment = (userId: string, postId: string, comment: string) => {
+  console.log(postId);
+
   firestore.collection("comments").add({
     userId: userId,
     postId: postId,
@@ -117,6 +119,27 @@ const deleteComment = (commentId: string) => {
       // The document probably doesn't exist.
       console.error("Error deleting document: ", error);
     });
+};
+
+const getCommentsByPost = async (postId: string) => {
+  let comments: Object[] = new Array();
+  await firestore
+    .collection("comments")
+    .where("postId", "==", postId)
+    .get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        comments.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+    })
+    .catch(function(error) {
+      // The document probably doesn't exist.
+      console.error("Error deleting document: ", error);
+    });
+  return comments;
 };
 
 /**
@@ -236,6 +259,7 @@ export {
   unLikePost,
   comment,
   deleteComment,
+  getCommentsByPost,
   upsertPost,
   deletePost,
   getPostById,
