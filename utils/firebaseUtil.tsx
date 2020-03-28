@@ -213,6 +213,21 @@ const getPostsByFollowing = async (following: string[]) => {
   return posts;
 };
 
+/**
+ * user fucntions
+ */
+const upsertUser = async (userObject: any) => {
+  //ToDo:user validation
+  await firestore
+    .collection("users")
+    .doc(userObject.id)
+    .set({
+      firstName: userObject.firstName,
+      lastName: userObject.lastName,
+      description: userObject.description
+    });
+};
+
 export {
   googleAuthenticate,
   followUser,
@@ -225,5 +240,6 @@ export {
   deletePost,
   getPostById,
   getPostsByUser,
-  getPostsByFollowing
+  getPostsByFollowing,
+  upsertUser
 };

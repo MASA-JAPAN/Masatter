@@ -28,8 +28,9 @@ export default function Feed(props: any) {
               query: { id: post.id }
             })
           }
+          key={post.id}
         >
-          <Post key={post.id} content={post.content} />
+          <Post content={post.content} />
         </div>
       ))}
 

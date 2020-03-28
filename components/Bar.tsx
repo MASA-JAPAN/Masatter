@@ -13,6 +13,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import Router from "next/router";
 import NProgress from "nprogress";
 import Head from "next/head";
+import IconButton from "@material-ui/core/IconButton";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 NProgress.configure({ showSpinner: false });
 
@@ -133,6 +135,19 @@ export default function Bar() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={() =>
+              Router.push({
+                pathname: "/profilePage"
+              })
+            }
+          >
+            <AccountCircle />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </div>
