@@ -1,21 +1,9 @@
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 import PostDialog from "../components/PostDialog";
 import Post from "../components/Post";
 import { getPostsByFollowing } from "../utils/firebaseUtil";
 import Router from "next/router";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    postButton: {
-      position: "absolute",
-      right: "10px",
-      bottom: "10px"
-    }
-  })
-);
-
 export default function Feed(props: any) {
-  const classes = useStyles();
   console.log(props.posts);
 
   return (
@@ -34,9 +22,18 @@ export default function Feed(props: any) {
         </div>
       ))}
 
-      <div className={classes.postButton}>
+      <div className="postButton">
         <PostDialog buttonName="Post" />
       </div>
+      <style jsx>
+        {`
+          .postButton {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+          }
+        `}
+      </style>
     </div>
   );
 }

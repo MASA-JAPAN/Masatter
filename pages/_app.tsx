@@ -46,9 +46,21 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <Bar />
-          <Component {...pageProps} />
+          <div className="appBar">
+            <Bar />
+          </div>
+          <div>
+            <Component {...pageProps} />
+          </div>
         </ThemeProvider>
+        {/* <style jsx>
+          {`
+            .appBar {
+              position: fixed;
+              width: 100vw;
+            }
+          `}
+        </style> */}
       </React.Fragment>
     );
   }
