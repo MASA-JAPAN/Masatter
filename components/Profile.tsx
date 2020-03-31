@@ -2,6 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { upsertUser } from "../utils/firebaseUtil";
+import { upsertProfileImage } from "../utils/firebaseUtil";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 
@@ -9,7 +10,8 @@ export default function Profile() {
   const [firstNameValue, setFirstNameValue] = React.useState("");
   const [lastNameValue, setLastNameValue] = React.useState("");
   const [discriptionValue, setDiscriptionValue] = React.useState("");
-  const [imgSrc, setImgSrc] = React.useState("");
+  const [imgUrl, setImgUrl] = React.useState("");
+  const [img, setImg] = React.useState("");
 
   const handleOnchangeFirstName = (e: any) => {
     setFirstNameValue(e.target.value);
@@ -30,13 +32,17 @@ export default function Profile() {
       lastName: lastNameValue,
       description: discriptionValue
     });
+    upsertProfileImage("testUser", img);
   };
 
   const handleChangeFile = (e: any) => {
     let createObjectURL = (window.URL || window.webkitURL).createObjectURL;
     const files = e.target.files;
     const imageUrl = files.length === 0 ? "" : createObjectURL(files[0]);
-    setImgSrc(imageUrl);
+    console.log(files[0]);
+
+    setImg(files[0]);
+    setImgUrl(imageUrl);
   };
 
   return (
@@ -46,7 +52,7 @@ export default function Profile() {
           <label htmlFor="profilePictureInput">
             <IconButton component="span">
               <Avatar
-                src={imgSrc}
+                src={imgUrl}
                 style={{
                   margin: "10px",
                   width: "300px",

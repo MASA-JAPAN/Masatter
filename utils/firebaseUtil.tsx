@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import "firebase/storage";
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -19,6 +20,7 @@ if (!firebase.apps.length) {
 
 const firestore = firebase.firestore();
 const auth = firebase.auth();
+const storage = firebase.storage();
 
 /**
  * Authentication
@@ -251,6 +253,24 @@ const upsertUser = async (userObject: any) => {
     });
 };
 
+const upsertProfileImage = async (userId: any, file: any) => {
+  const storageRef = storage.ref();
+  const mountainImagesRef = storageRef.child(`profileImage/${userId}`);
+  mountainImagesRef
+    .put(file, {
+      customMetadata: {
+        userId: userId
+      }
+    })
+    .then(function(snapshot) {
+      console.log(snapshot);
+    })
+    .catch(function(error) {
+      // The document probably doesn't exist.
+      console.error("Error deleting storage: ", error);
+    });
+};
+
 export {
   googleAuthenticate,
   followUser,
@@ -265,5 +285,6 @@ export {
   getPostById,
   getPostsByUser,
   getPostsByFollowing,
-  upsertUser
+  upsertUser,
+  upsertProfileImage
 };
